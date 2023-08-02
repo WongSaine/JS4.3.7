@@ -1,0 +1,78 @@
+*, $:befor, $:after
+  margin 0px
+  padding 0px
+  box-sizing border-box
+
+body
+  display flex
+  padding 5vh
+  justify-content center
+  align-items center
+  background #e5e5e5
+
+main
+  width min(45vh, 100vw)
+  height 90vh
+  padding 5vh
+  background-color #c4c4c4
+
+#search
+  width min(35vh, 80vw)
+  height 5vh
+  border none
+  padding-left 1vh
+  font 1.8rem sans-serif
+
+#dropdown 
+  display none
+  width: min(35vh, 80vw)
+  position absolute
+  z-index 1
+  max-height: 120px
+  overflow-y: auto
+
+#search:focus + #dropdown
+  display block
+
+#dropdown option:checked
+  background-color lightblue
+  color white
+
+#dropdown option:hover 
+  background-color lightblue
+  color white
+
+#repo-list 
+  margin-top 3vh
+
+.repo-item 
+  display flex
+  flex-direction column
+  align-items flex-start
+  margin-bottom 1vh
+  padding 1vh
+  font-size 1.5rem
+  color black
+  background-color white
+
+.repo-item__name
+.repo-item__owner
+.repo-item__stars
+  display block
+
+.repo-item__name 
+  font-weight bold
+  margin-right 1vh
+
+.repo-item__owner 
+  margin-right 1vh
+
+.repo-item__stars 
+  font-size 0.8em
+  color #999
+  margin-right 1vh
+
+.repo-item__delete
+  margin-left auto
+  color #999
+  cursor pointer
