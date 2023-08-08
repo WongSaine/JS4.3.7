@@ -1,5 +1,8 @@
 'use strict'
 
+const SEARCH = document.getElementById('search');
+const DROPDOWN = document.getElementById('dropdown');
+const REPOLIST = document.getElementById('repo-list');
 function debounce(fn, time) {
   let timerId;
   return () => {
@@ -17,15 +20,29 @@ async function searchRepositories(searchString) {
   return await response.json();
 }
 function autocomplite(data, dropdown, repoList, search) {
-  for (let i=4; i>=0; i--) {
-    const repoName = data.items[i].name;
+  try {
+    const clickHandlers = [];
+    for (let i=4; i>=0; i--) {
+      const repoName = data.items[i].name;
+      dropdown.insertAdjacentHTML('afterbegin', 
+      `<div class="dropdown">${repoName.charAt(0).toUpperCase() + repoName.slice(1)}</div>`);
+      const dropdownItem = dropdown.querySelector('.dropdown');
+      const clickHandler = () => {
+        search.value = '';
+        dropdown.querySelectorAll('.dropdown').forEach(item => {
+          item.removeEventListener('click', clickHandlers[item.dataset.handlerIndex]);
+        });
+        dropdown.replaceChildren();
+        favorite(data.items[i], repoList);
+      };
+      dropdownItem.addEventListener('click', clickHandler);
+      dropdownItem.dataset.handlerIndex = clickHandlers.length;
+      clickHandlers.push(clickHandler);
+    }
+  }
+  catch {
     dropdown.insertAdjacentHTML('afterbegin', 
-    `<div class="dropdown">${repoName.charAt(0).toUpperCase() + repoName.slice(1)}</div>`); 
-    dropdown.firstChild.addEventListener('click', () => {
-      search.value = '';
-      dropdown.replaceChildren();
-      favorite(data.items[i], repoList);
-    });
+    `<div class="dropdown">По вашему запросу ничего не найдено!</div>`); 
   }
 }
 function favorite(data, repoList) {
@@ -35,7 +52,12 @@ function favorite(data, repoList) {
   <div>Stars: ${data.stargazers_count}</div></div>
   <div class="repo-item__delete">✕</div></div>`);
   const newItem = repoList.firstChild;
-  newItem.lastChild.addEventListener('click', () => newItem.remove());
+  const deleteButton = newItem.lastChild;
+  const deleteHandler = () => {
+    newItem.remove();
+    deleteButton.removeEventListener('click', deleteHandler);
+  };
+  deleteButton.addEventListener('click', deleteHandler);
 }
 async function main(search, dropdown, repoList) {
   dropdown.replaceChildren();
@@ -44,7 +66,4 @@ async function main(search, dropdown, repoList) {
   dropdown.replaceChildren();
   autocomplite(data, dropdown, repoList, search);
 }
-const search = document.getElementById('search');
-const dropdown = document.getElementById('dropdown');
-const repoList = document.getElementById('repo-list');
-search.addEventListener('input', debounce(() => main(search, dropdown, repoList), 600));
+SEARCH.addEventListener('input', debounce(() => main(SEARCH, DROPDOWN, REPOLIST), 500));
