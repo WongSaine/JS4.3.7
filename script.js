@@ -25,7 +25,7 @@ function autocomplite(data, dropdown, repoList, search) {
     for (let i=4; i>=0; i--) {
       const repoName = data.items[i].name;
       dropdown.insertAdjacentHTML('afterbegin', 
-      `<div class="dropdown">${repoName.charAt(0).toUpperCase() + repoName.slice(1)}</div>`);
+      `<ul><li class="dropdown">${repoName.charAt(0).toUpperCase() + repoName.slice(1)}</li></ul>`);
       const dropdownItem = dropdown.querySelector('.dropdown');
       const clickHandler = () => {
         search.value = '';
@@ -46,11 +46,11 @@ function autocomplite(data, dropdown, repoList, search) {
   }
 }
 function favorite(data, repoList) {
-  repoList.insertAdjacentHTML('afterbegin', `<div class="repo-item"><div>
-  <div>Name: ${data.name}</div>
-  <div>Owner: ${data.owner.login}</div>
-  <div>Stars: ${data.stargazers_count}</div></div>
-  <div class="repo-item__delete">✕</div></div>`);
+  repoList.insertAdjacentHTML('afterbegin', `<section class="repo-item"><ul>
+  <li>Name: ${data.name}</li>
+  <li>Owner: ${data.owner.login}</li>
+  <li>Stars: ${data.stargazers_count}</li></ul>
+  <button  class="repo-item__delete">✕</button ></section>`);
   const newItem = repoList.firstChild;
   const deleteButton = newItem.lastChild;
   const deleteHandler = () => {
